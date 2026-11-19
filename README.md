@@ -1,241 +1,295 @@
 <div align="center">
 
-# multiclaude
+# ClaudeDeck
 
-**Several Claude Pro / Max accounts in one Claude Code, on your own computer (macOS, Windows, Linux).**
+**A local Claude Code account manager and usage dashboard for macOS, Windows, and Linux.**
 
-Put your accounts in priority order, type `claude`, and it starts on the first one that still has room.
-Live usage for every account in a dashboard, the menu bar, the terminal and Claude Code's status line.
+Organize multiple Claude accounts, monitor usage, manage coding sessions, and choose which account to use from your terminal or local dashboard.
 
-[Install](#install) · [Quick start](#quick-start) · [Usage guide](docs/usage.md) · [Setup guide](docs/setup.md) ·
-[Configuration](docs/configuration.md) · [How it works](docs/how-it-works.md) · [Troubleshooting](docs/troubleshooting.md)
+[Quick start](#quick-start) · [Installation](#installation) · [Windows](#windows) · [Commands](#everyday-commands) · [Documentation](#documentation)
 
-[![Latest release](https://img.shields.io/github/v/release/subh05sus/multiclaude)](https://github.com/subh05sus/multiclaude/releases/latest)
-[![CI](https://github.com/subh05sus/multiclaude/actions/workflows/ci.yml/badge.svg)](https://github.com/subh05sus/multiclaude/actions/workflows/ci.yml)
 ![License: MIT](https://img.shields.io/badge/license-MIT-blue)
 ![Platform: macOS, Windows, Linux](https://img.shields.io/badge/platform-macOS%20%7C%20Windows%20%7C%20Linux-lightgrey)
-![Node 22.18+](https://img.shields.io/badge/node-22.18%2B-green)
+![Node.js 22.18+](https://img.shields.io/badge/node-22.18%2B-green)
 ![Runtime dependencies: 0](https://img.shields.io/badge/runtime%20dependencies-0-brightgreen)
-![100% local](https://img.shields.io/badge/100%25-local-8A63D2)
+![Local application](https://img.shields.io/badge/runs-100%25%20locally-8A63D2)
 
-<img src="docs/screenshots/accounts.png" alt="The Accounts page: three accounts in priority order with 5-hour and weekly usage bars, and a briefing that says the next session goes to the first account with room" width="900">
+<img src="docs/screenshots/accounts.png" alt="ClaudeDeck accounts dashboard showing account priority and usage information" width="900">
 
 </div>
 
-## What it does
+## Overview
 
-- **One profile per Claude account.** Each keeps its own login. Everything else is shared: chat history,
-  memory, settings, hooks, `CLAUDE.md`, skills, plugins, mods, commands, agents and MCP servers.
-- **Priority order.** You decide which account goes first and at what usage level each one counts as full
-  ("switch at", 90% by default). Pick strictly by order, or by most room left.
-- **Plain `claude` picks for you** (optional). After `mc shell on`, typing `claude` starts on the right account.
-  Commands like `claude mcp add` or `claude update` still run normally.
-- **Live usage** for every account's 5-hour and weekly limits (and per-model weekly limits on plans that have
-  them) in:
-  - a local web dashboard,
-  - a menu bar app,
-  - a terminal picker,
-  - Claude Code's own status line.
-- **Alerts** as desktop notifications when an account crosses 80% and 95% (you choose the levels), naming the next
-  account with room, and again when a limit resets.
-- **Move a session in one click.** Press **Move to <account>** under the prompt or in the menu bar, or run `mc next`, and
-  the conversation reopens on the next account with room, with the whole context. `mc next --fresh` starts clean there with a short handover note instead.
-- **Auto-resume.** When a session stops at its account's usage limit, it waits for that account to reset,
-  then continues by itself, picking up where it left off. The notification also names another account with room,
-  in case you'd rather `mc next` now.
-- **Optional paid API-key fallback.** When Anthropic answers that a plan's limit is reached, a local relay resends
-  that request on your own API key until the plan resets, up to a daily dollar cap you set.
-- **Stats** from Claude Code's session files on your computer: what your work would have cost at API prices, per day,
-  account, model and project.
-- **Encrypted export** to move your setup to another computer.
+ClaudeDeck is a local utility for managing multiple Claude Pro or Max account profiles within Claude Code. It helps you organize accounts, monitor their usage, and select an account when starting or continuing a coding session.
 
-### What it deliberately doesn't do
+Each account keeps its own login, while supported Claude Code data such as chat history, memory, settings, hooks, skills, plugins, commands, agents, and MCP servers can be shared between profiles.
 
-It never moves a running conversation to another Claude account by itself (auto-resume waits for the *same*
-account to reset). Pooling subscriptions to get around
-their usage limits is against Anthropic's terms and can get accounts banned, so switching accounts is always your
-click (**Move to <account>**) or your command (`mc next`). The only automatic switch is to **your own API key**, which you pay for per
-request.
+The application includes a local web dashboard, terminal interface, Claude Code status-line integration, and a macOS menu bar app.
+
+## Features
+
+- **Multiple account profiles:** Add and manage separate Claude account profiles, each with its own login.
+- **Account priority:** Arrange accounts in a preferred order and configure the usage threshold at which an account is considered full.
+- **Automatic account selection on launch:** Optionally configure the `claude` command to start with the account selected by ClaudeDeck.
+- **Usage monitoring:** View 5-hour and weekly usage limits, including per-model weekly limits on supported plans.
+- **Multiple interfaces:** Monitor usage through the local web dashboard, terminal picker, Claude Code status line, and macOS menu bar app.
+- **Usage alerts:** Receive desktop notifications when configured usage thresholds are reached and when limits reset.
+- **Session continuation:** Move a session to another account with available capacity using an explicit command or the session interface.
+- **Auto-resume:** Wait for the same account's usage limit to reset and continue a session when supported by the application.
+- **Optional API-key fallback:** Configure your own Anthropic API key for paid API usage when a plan limit is reached. A daily spending cap can be configured.
+- **Usage statistics:** Review estimated API-equivalent usage by day, account, model, and project using local Claude Code session files.
+- **Encrypted export:** Export your setup in encrypted form to move it to another computer.
+
+### Account switching and usage limits
+
+ClaudeDeck does not silently move a running conversation between Claude subscription accounts. Moving a session to another account is an explicit user action, such as selecting **Move to** or running `mc next`.
+
+Automatic resume waits for the same account's usage limit to reset. The optional API fallback uses your own paid Anthropic API key and incurs API charges.
+
+Do not use account management to pool subscriptions or evade provider usage limits. You are responsible for using your accounts in accordance with Anthropic's terms.
 
 ## Screenshots
 
-| Sessions: continue any conversation on another account | Stats: API value per day, by account |
+| Accounts and usage | Sessions |
 |---|---|
-| <img src="docs/screenshots/sessions.png" alt="Sessions page with a session opened to continue it on another account"> | <img src="docs/screenshots/stats.png" alt="Stats page with number tiles, a stacked daily bar chart and splits by account, model and project"> |
-| **Settings: picking, alerts, API fallback** | **Activity: every switch, alert and fallback** |
-| <img src="docs/screenshots/settings.png" alt="Settings page"> | <img src="docs/screenshots/activity.png" alt="Activity page"> |
+| <img src="docs/screenshots/accounts.png" alt="Accounts dashboard" width="440"> | <img src="docs/screenshots/sessions.png" alt="Session management screen" width="440"> |
 
-<p align="center"><img src="docs/screenshots/phone.png" alt="The dashboard on a phone-sized screen with a floating tab bar" width="300"></p>
+| Usage statistics | Settings |
+|---|---|
+| <img src="docs/screenshots/stats.png" alt="Usage statistics screen" width="440"> | <img src="docs/screenshots/settings.png" alt="Settings screen" width="440"> |
 
-The screenshots use sample data (`npm run demo` serves it, so you can try the dashboard without an account).
+| Activity |
+|---|
+| <img src="docs/screenshots/activity.png" alt="Activity screen" width="700"> |
+
+<p align="center">
+  <img src="docs/screenshots/phone.png" alt="ClaudeDeck dashboard on a phone-sized screen" width="300">
+</p>
+
+The repository includes sample data for the dashboard. Run `npm run demo` to view the demo without connecting an account.
 
 ## Requirements
 
-- **macOS 13+, Windows 10/11, or Linux.** Everything works on all three except the menu bar app, which is macOS
-  only (the dashboard does the same job). See [Windows](#windows) below.
-- **Node.js 22.18+ or 23.6+** (multiclaude runs its TypeScript directly, with no build step).
-- **Claude Code** installed and signed in (`claude --version` works).
-- One or more **Claude Pro or Max** accounts. An Anthropic API key is optional, for the fallback.
+- **Operating system:** macOS 13+, Windows 10/11, or Linux.
+- **Node.js:** 22.18+ or 23.6+.
+- **Git:** Required for cloning the repository.
+- **Claude Code:** Installed and signed in (`claude --version` should work).
+- **Claude account:** One or more Claude Pro or Max accounts.
+- **Anthropic API key:** Optional; required only if you want to use the API-key fallback.
 
-## Install
+The macOS menu bar application is available only on macOS. The local dashboard provides the corresponding usage overview on Windows and Linux.
 
-### Install with an agent
+## Installation
 
-Paste this into Claude Code and it does the install for you. You only step in to answer its questions and sign in to
-your accounts.
+### macOS and Linux
 
-```text
-Install multiclaude for me from https://github.com/subh05sus/multiclaude. Read its README first.
+Clone the repository and run setup:
 
-1. Check the requirements: Node.js 22.18+, git, and Claude Code signed in. If something is missing, tell me how to
-   get it and stop.
-2. Clone the repo to ~/multiclaude. If it's already there, pull the latest instead.
-3. Tell me what setup will change on my computer, then ask me whether plain `claude` should pick an account by
-   itself (the --shell option).
-4. Run `./bin/mc setup`, with --shell if I said yes. On macOS without the Xcode command line tools, add
-   --no-menubar. On Windows, use the commands in the README's Windows section.
-5. Run `mc doctor` (or `./bin/mc doctor` if mc isn't on the PATH yet) and fix anything it flags.
-6. Ask me what to call each extra Claude account. Signing in opens a browser, so don't run this yourself: tell me to
-   type `! mc add <name>` at the prompt for each one, and wait until I've done them.
-7. Ask me which account to try first and run `mc order` with my answer.
-8. Finish by telling me how to start a session, the dashboard address, and to open a new terminal tab.
-```
-
-### Install by hand
-
-```sh
-git clone https://github.com/subh05sus/multiclaude.git ~/multiclaude
-cd ~/multiclaude
+```bash
+git clone https://github.com/finefigo/claudedeck.git
+cd claudedeck
 ./bin/mc setup --shell
 ```
 
-`mc setup --shell`:
+The setup command can:
 
-1. puts `mc` on your PATH (`~/.local/bin/mc`, where Claude Code's own launcher lives);
-2. adds a status line and a session hook to `~/.claude/settings.json`, keeping a backup next to it (an existing
-   status line keeps showing first);
-3. starts the background service at login (LaunchAgent `com.multiclaude.daemon`, port 4880, localhost only);
-4. builds the menu bar app into `~/.multiclaude/MultiClaude.app` and opens it at login (needs the Xcode command
-   line tools for `swiftc`; skip it with `--no-menubar`);
-5. installs the small `multiclaude-move` plugin that draws the **Move to <account>** button under the prompt;
-6. with `--shell`, makes plain `claude` pick an account (adds a small function to `~/.zshrc` / `~/.bashrc` /
-   fish, between marker lines).
+1. Add the `mc` command to your PATH.
+2. Add a Claude Code status line and session hook to `~/.claude/settings.json`, keeping a backup of the existing settings file.
+3. Configure the background service to start at login.
+4. Build and configure the macOS menu bar application when supported.
+5. Install the session-move integration.
+6. With `--shell`, configure your shell so that the plain `claude` command uses the account selected by ClaudeDeck.
 
-Then **open a new terminal tab** and check everything with `mc doctor`.
+On macOS, the menu bar app requires the Xcode command line tools. Use `--no-menubar` to skip it.
+
+After setup, open a new terminal tab and run:
+
+```bash
+mc doctor
+```
 
 ### Windows
 
-In PowerShell (Node.js and Claude Code installed, `git` available):
+Open PowerShell with Node.js, Claude Code, and Git installed:
 
 ```powershell
-git clone https://github.com/subh05sus/multiclaude.git $HOME\multiclaude
-node --disable-warning=ExperimentalWarning $HOME\multiclaude\src\cli.ts setup --shell
+git clone https://github.com/finefigo/claudedeck.git $HOME\claudedeck
+node --disable-warning=ExperimentalWarning $HOME\claudedeck\src\cli.ts setup --shell
 ```
 
-- `mc.cmd` goes into `%USERPROFILE%\.local\bin` (where Claude Code's own `claude.exe` lives, already on PATH).
-- The service starts at login from your Startup folder (`multiclaude.vbs`, runs hidden, no admin rights).
-- `claude` picks an account in PowerShell and Git Bash. If PowerShell says scripts are disabled, run once:
-  `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`. In plain cmd.exe, use `mc auto`.
-- Notifications are Windows toasts; Start buttons open Windows Terminal (or a console window).
-- Shared folders are directory junctions; shared files are symlinks when Developer Mode is on, hard links
-  otherwise. Neither needs admin rights.
+The setup process configures the `mc.cmd` command and starts the background service at login.
 
-Linux: the same `./bin/mc setup --shell`; the service runs as a systemd user unit.
+- ClaudeDeck supports account selection in PowerShell and Git Bash.
+- If PowerShell reports that scripts are disabled, run this once:
 
-Your existing `~/.claude` becomes the profile called **main**. Nothing in it moves.
+  ```powershell
+  Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+  ```
 
-**Releases:** every version is on the [releases page](https://github.com/subh05sus/multiclaude/releases), with
-its changes, a source zip (an alternative to `git clone`) and the prebuilt macOS menu bar app.
+- In plain Command Prompt (`cmd.exe`), use `mc auto`.
+- Notifications use Windows toast notifications.
+- Shared folders use directory junctions. Shared files use symlinks when Developer Mode is enabled and hard links otherwise.
 
-There's nothing to `npm install` to run it. `npm install` only fetches the TypeScript types for development.
+Open a new terminal tab after setup, then check the installation:
+
+```powershell
+mc doctor
+```
+
+### Linux service
+
+On Linux, use the same setup command as macOS:
+
+```bash
+./bin/mc setup --shell
+```
+
+The background service runs as a systemd user unit.
 
 ## Quick start
 
-```sh
-mc add work --label "Team Max"   # a browser window opens: sign in with that Claude account
-mc add personal                  # one profile per account
-mc order work personal main      # first = tried first
-mc set main switch-at 80         # optional: main counts as full at 80%
+Add your Claude account profiles and arrange their priority:
 
-claude                           # starts on the first account in your order with room
-                                 # (or: mc auto, or mc to choose in a picker)
+```bash
+mc add work --label "Team Max"
+mc add personal
+mc order work personal main
 ```
 
-When the account you're on fills up, you get a notification naming the next one with room. Then, in the same
-folder:
+Optionally configure the usage threshold for an account:
 
-```sh
-mc next            # same conversation, next account with room
-mc next --fresh    # or: a fresh session there with a handover note
+```bash
+mc set main switch-at 80
 ```
 
-Open the dashboard with `mc ui` (http://127.0.0.1:4880), or use the menu bar icon.
+Start Claude Code using the first account in your configured order that has room:
+
+```bash
+claude
+```
+
+You can also use:
+
+```bash
+mc auto
+```
+
+To move the current folder's latest session to the next account with room:
+
+```bash
+mc next
+```
+
+To start a fresh session on the next account with a short handover note:
+
+```bash
+mc next --fresh
+```
+
+Open the local dashboard:
+
+```bash
+mc ui
+```
+
+The dashboard is available at `http://127.0.0.1:4880`.
 
 ## Everyday commands
 
-| Command | What it does |
+| Command | Description |
 |---|---|
-| `claude` | With `mc shell on`: starts on the account `mc auto` would pick. Without it: plain Claude Code on main |
-| `mc` | Terminal picker with every account's usage. ↵ start · `a` auto-pick · `r` resume here · `J`/`K` reorder · `p` pause · `d` dashboard |
-| `mc auto [args]` | Start on the first account with room (or most room, see `mc pick`) |
-| `mc <name> [args]` | Start on a given account. Any `claude` arguments work: `mc work -p "hi"`, `mc work --resume` |
-| `mc next [--fresh]` | Move this folder's latest session to the next account with room |
-| `mc resume <name> [id]` | Continue a session on an account (default: the latest in this folder) |
-| `mc list` | Accounts, usage, order and what `mc auto` would pick |
-| `mc ui` | Open the dashboard |
+| `mc` | Open the terminal account picker. |
+| `mc auto [args]` | Start Claude Code using the first account with room. |
+| `mc <name> [args]` | Start Claude Code using a specific account profile. |
+| `mc next [--fresh]` | Move the latest session in the current folder to the next account with room. |
+| `mc resume <name> [id]` | Resume a session on a selected account. |
+| `mc list` | Show accounts, usage, priority order, and the account selected by `mc auto`. |
+| `mc ui` | Open the local dashboard. |
+| `mc doctor` | Check the installation and report configuration issues. |
 
-Full reference, with every flag: **[docs/usage.md](docs/usage.md)**.
+For the full command reference and available options, see [the usage guide](docs/usage.md).
 
-## Docs
+## Documentation
 
-| Guide | What's in it |
+| Guide | Description |
 |---|---|
-| [Setup](docs/setup.md) | Install step by step, adding accounts, the API key, permissions macOS asks for, updating, uninstalling |
-| [Usage](docs/usage.md) | Every command; the picker, dashboard, menu bar and status line; alerts, sessions, handover, stats, export |
-| [Configuration](docs/configuration.md) | `~/.multiclaude/config.json` field by field, environment variables, every file multiclaude writes |
-| [How it works](docs/how-it-works.md) | Profiles and sharing, usage sources, picking, the relay, stats, security model |
-| [Troubleshooting](docs/troubleshooting.md) | Common problems and fixes, FAQ |
-| [Decisions](docs/decisions.md) | Product and design decisions and why |
+| [Setup](docs/setup.md) | Installation, adding accounts, API key configuration, permissions, updates, and uninstalling. |
+| [Usage](docs/usage.md) | Commands, terminal picker, dashboard, menu bar, status line, alerts, sessions, statistics, and export. |
+| [Configuration](docs/configuration.md) | Configuration file fields, environment variables, and files created by the application. |
+| [How it works](docs/how-it-works.md) | Account profiles, shared data, usage sources, account selection, API relay, statistics, and security model. |
+| [Troubleshooting](docs/troubleshooting.md) | Common problems and frequently asked questions. |
+| [Decisions](docs/decisions.md) | Product and design decisions. |
 
 ## Privacy and security
 
-- Everything runs on your machine. The service listens on `127.0.0.1` only and refuses requests addressed to any
-  other host name, so a web page can't reach it.
-- Logins stay where Claude Code keeps them (the macOS Keychain, or `.credentials.json` in each profile on
-  Windows and Linux). multiclaude reads them only to ask Anthropic for
-  that account's usage, and never refreshes or copies them, except into an encrypted export you ask for.
-- The API key is stored in the Keychain on macOS (item `multiclaude-api-key`), or in `~/.multiclaude/api-key`,
-  readable only by you, on Windows and Linux.
-- Changes from the dashboard need a random token that only the dashboard page and the menu bar app can read.
-- The only network traffic is Claude Code's own requests to `api.anthropic.com`, plus the usage check
-  (`/api/oauth/usage`) every few minutes for accounts with no open session.
+- The application runs locally. Its background service listens on `127.0.0.1`.
+- Account logins remain in the locations used by Claude Code, such as the macOS Keychain or profile credential files on Windows and Linux.
+- The application reads account credentials to request usage information. It does not refresh or copy them, except when included in an encrypted export explicitly requested by the user.
+- The optional API key is stored in the macOS Keychain or in a user-readable-only file on Windows and Linux.
+- Dashboard changes require a random token available to the dashboard and menu bar application.
+- Network requests include Claude Code's own requests to Anthropic and periodic usage checks for accounts without an open session.
 
-## Develop
+Review the configuration and security documentation before using the application with personal accounts.
 
-```sh
-npm install      # TypeScript types only
-npm test         # relay fallback against a fake Anthropic, picking, usage, links, stats, handover, export, shell
-npm run check    # tsc --noEmit
-npm run lint     # design guard: no side-edge accents, no clipped focus rings, no raw colours in the UI
-npm run demo     # the dashboard with sample data on http://127.0.0.1:4899
+## Development
+
+Install the development dependencies:
+
+```bash
+npm install
 ```
 
-Releasing: bump `version` in `package.json`, add a `## <version> — <date>` section to `CHANGELOG.md`, commit,
-then `git tag -a v<version> -m "multiclaude <version>" && git push origin main v<version>`. The
-[release workflow](.github/workflows/release.yml) tests, builds the menu bar app and publishes the release with
-notes from the changelog.
+Run the test suite:
 
-Layout: `src/` (TypeScript, run directly by Node), `web/` (the dashboard: plain HTML, CSS and JS), `menubar/`
-(Swift), `test/`, `scripts/`, `docs/`.
+```bash
+npm test
+```
+
+Type-check the project:
+
+```bash
+npm run check
+```
+
+Run the lint checks:
+
+```bash
+npm run lint
+```
+
+Start the dashboard with sample data:
+
+```bash
+npm run demo
+```
+
+The demo dashboard is available at `http://127.0.0.1:4899`.
+
+The project layout is organized as follows:
+
+```text
+claudedeck/
+├── src/          # TypeScript application and CLI
+├── web/          # Local dashboard (HTML, CSS, JavaScript)
+├── menubar/      # macOS menu bar application (Swift)
+├── test/         # Tests
+├── scripts/      # Supporting scripts
+├── docs/         # Guides and screenshots
+├── bin/          # CLI launcher
+├── package.json
+└── README.md
+```
 
 ## Disclaimer
 
-multiclaude is an independent project, not made by or affiliated with Anthropic. "Claude" and "Claude Code" are
-Anthropic's. You're responsible for using your accounts within
-[Anthropic's terms](https://www.anthropic.com/legal/consumer-terms). multiclaude reads one internal Claude Code
-setting and two unofficial endpoints and headers, any of which can change with a Claude Code update; see
-[How it works](docs/how-it-works.md).
+ClaudeDeck is an independent, community-maintained project and is not made by, endorsed by, or affiliated with Anthropic. Claude and Claude Code are trademarks of Anthropic.
+
+The application interacts with Claude Code settings and usage endpoints that may change in future Claude Code updates. Use the application at your own discretion and comply with [Anthropic's terms](https://www.anthropic.com/legal/consumer-terms).
+
+## Attribution
+
+This repository is based on the original **MultiClaude** project by [subh05sus](https://github.com/subh05sus/multiclaude). The original project and its MIT licence are retained as the basis for this repository. Please refer to the original repository for upstream changes and history.
 
 ## License
 
-[MIT](LICENSE)
+This project is distributed under the MIT License. See the [LICENSE](LICENSE) file for details.
