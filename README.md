@@ -290,6 +290,17 @@ The application interacts with Claude Code settings and usage endpoints that may
 
 This repository is based on the original **MultiClaude** project by [subh05sus](https://github.com/subh05sus/multiclaude). The original project and its MIT licence are retained as the basis for this repository. Please refer to the original repository for upstream changes and history.
 
+## ClaudeDeck-specific changes
+
+Compared with the credited upstream project, this repository's current changes focus on ClaudeDeck branding and project maintenance:
+
+- A rewritten README with an updated overview, installation instructions, command reference, and reorganized screenshot gallery for `finefigo/claudedeck`.
+- Package and plugin marketplace metadata for the ClaudeDeck repository.
+- Migration support for the Move plugin's old `multiclaude` marketplace alias.
+- The Unix `bin/mc` launcher is kept executable so the documented macOS and Linux setup commands can run it directly.
+
+The account-profile, session, usage-tracking, and dashboard implementation remains largely based on MultiClaude. This section describes repository-specific maintenance; it does not claim those inherited features as new work.
+
 ## License
 
 This project is distributed under the MIT License. See the [LICENSE](LICENSE) file for details.
