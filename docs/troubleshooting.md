@@ -96,7 +96,7 @@ After `mc next` or **Move to <account>**, close the old window. Both write to th
 
 **The Move button doesn't show or doesn't respond**
 It only shows once the account is past its switch-at level and another account has room. Open sessions need
-`/reload-plugins` or a restart after `mc setup`. `claude plugin list` should show `multiclaude-move@multiclaude`;
+`/reload-plugins` or a restart after `mc setup`. `claude plugin list` should show `multiclaude-move@claudedeck`;
 if it doesn't, run `mc setup` again. Clicking needs fullscreen mode (`"tui": "fullscreen"`). `mc next` always works.
 
 **The menu bar app didn't build**

@@ -77,13 +77,14 @@ function installResumeHook(s: Settings): boolean {
   return true;
 }
 
-const MOVE_PLUGIN = 'multiclaude-move@multiclaude';
+const MOVE_PLUGIN = 'multiclaude-move@claudedeck';
+const LEGACY_MOVE_PLUGIN = 'multiclaude-move@multiclaude';
 
 /** Whether the "Move to <account>" button is on. */
 export function movePluginEnabled(): boolean {
   try {
     const s = JSON.parse(readFileSync(join(MAIN_CLAUDE_DIR, 'settings.json'), 'utf8')) as { enabledPlugins?: Record<string, boolean> };
-    return s.enabledPlugins?.[MOVE_PLUGIN] === true;
+    return s.enabledPlugins?.[MOVE_PLUGIN] === true || s.enabledPlugins?.[LEGACY_MOVE_PLUGIN] === true;
   } catch {
     return false;
   }
@@ -91,8 +92,21 @@ export function movePluginEnabled(): boolean {
 
 /** Install the plugin that draws the button. Returns what went wrong, if anything. */
 export function installMovePlugin(): string | null {
-  if (movePluginEnabled()) return null;
   const exe = claudeExecutable(loadConfig().claudePath);
+  let settings: { enabledPlugins?: Record<string, boolean> } = {};
+  try {
+    settings = JSON.parse(readFileSync(join(MAIN_CLAUDE_DIR, 'settings.json'), 'utf8')) as typeof settings;
+  } catch {
+    /* no settings yet */
+  }
+  if (settings.enabledPlugins?.[MOVE_PLUGIN]) {
+    // Clean up a previous install that still uses the old marketplace alias.
+    spawnClaudeSync(exe, ['plugin', 'uninstall', LEGACY_MOVE_PLUGIN, '--scope', 'user'], { encoding: 'utf8' });
+    spawnClaudeSync(exe, ['plugin', 'marketplace', 'remove', 'multiclaude'], { encoding: 'utf8' });
+    return null;
+  }
+  spawnClaudeSync(exe, ['plugin', 'uninstall', LEGACY_MOVE_PLUGIN, '--scope', 'user'], { encoding: 'utf8' });
+  spawnClaudeSync(exe, ['plugin', 'marketplace', 'remove', 'multiclaude'], { encoding: 'utf8' });
   spawnClaudeSync(exe, ['plugin', 'marketplace', 'add', REPO_DIR], { encoding: 'utf8' });
   const r = spawnClaudeSync(exe, ['plugin', 'install', MOVE_PLUGIN, '--scope', 'user'], { encoding: 'utf8' });
   return r.status === 0 ? null : String(r.stderr || r.stdout || r.error?.message || 'install failed').trim();
@@ -101,6 +115,8 @@ export function installMovePlugin(): string | null {
 export function removeMovePlugin(): void {
   const exe = claudeExecutable(loadConfig().claudePath);
   spawnClaudeSync(exe, ['plugin', 'uninstall', MOVE_PLUGIN, '--scope', 'user'], { encoding: 'utf8' });
+  spawnClaudeSync(exe, ['plugin', 'uninstall', LEGACY_MOVE_PLUGIN, '--scope', 'user'], { encoding: 'utf8' });
+  spawnClaudeSync(exe, ['plugin', 'marketplace', 'remove', 'claudedeck'], { encoding: 'utf8' });
   spawnClaudeSync(exe, ['plugin', 'marketplace', 'remove', 'multiclaude'], { encoding: 'utf8' });
 }
 

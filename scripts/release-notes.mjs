@@ -49,7 +49,7 @@ if (process.argv.includes('--section-only')) {
   process.exit(0);
 }
 
-const repo = 'https://github.com/subh05sus/multiclaude';
+const repo = 'https://github.com/finefigo/claudedeck';
 console.log(unwrap(`${section}
 
 ## Install or update
@@ -57,15 +57,15 @@ console.log(unwrap(`${section}
 macOS / Linux:
 
 \`\`\`sh
-git clone ${repo}.git ~/multiclaude     # or download the source zip from this release
-cd ~/multiclaude && ./bin/mc setup --shell
+git clone ${repo}.git ~/claudedeck     # or download the source zip from this release
+cd ~/claudedeck && ./bin/mc setup --shell
 \`\`\`
 
 Windows (PowerShell):
 
 \`\`\`powershell
-git clone ${repo}.git $HOME\\multiclaude
-node --disable-warning=ExperimentalWarning $HOME\\multiclaude\\src\\cli.ts setup --shell
+git clone ${repo}.git $HOME\\claudedeck
+node --disable-warning=ExperimentalWarning $HOME\\claudedeck\\src\\cli.ts setup --shell
 \`\`\`
 
 Updating: \`git pull\` in the folder, then \`mc setup\` again. Guides: [setup](${repo}/blob/v${version}/docs/setup.md) ·

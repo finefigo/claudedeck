@@ -1,6 +1,6 @@
 {
-  "name": "multiclaude",
-  "owner": { "name": "subh05sus" },
+  "name": "claudedeck",
+  "owner": { "name": "finefigo" },
   "plugins": [
     {
       "name": "multiclaude-move",

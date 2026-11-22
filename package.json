@@ -1,7 +1,7 @@
 {
-  "name": "multiclaude",
+  "name": "claudedeck",
   "version": "0.3.2",
-  "description": "Run several Claude accounts side by side in Claude Code: shared history, live usage, alerts, and a paid API-key fallback.",
+  "description": "Local Claude Code account manager and usage dashboard for macOS, Windows, and Linux.",
   "type": "module",
   "license": "MIT",
   "bin": {
@@ -21,14 +21,14 @@
     "@types/node": "^24.0.0",
     "typescript": "^5.9.0"
   },
-  "author": "Subhadip Saha",
+  "author": "Finefigo contributors (based on MultiClaude by Subhadip Saha)",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/subh05sus/multiclaude.git"
+    "url": "git+https://github.com/finefigo/claudedeck.git"
   },
-  "homepage": "https://github.com/subh05sus/multiclaude#readme",
+  "homepage": "https://github.com/finefigo/claudedeck#readme",
   "bugs": {
-    "url": "https://github.com/subh05sus/multiclaude/issues"
+    "url": "https://github.com/finefigo/claudedeck/issues"
   },
   "keywords": [
     "anthropic",

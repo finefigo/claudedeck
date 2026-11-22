@@ -34,8 +34,8 @@ Sign in to Claude Code once the normal way (`claude`, then `/login`) if you have
 ## 2. Get the code
 
 ```sh
-git clone https://github.com/subh05sus/multiclaude.git ~/multiclaude
-cd ~/multiclaude
+git clone https://github.com/finefigo/claudedeck.git ~/claudedeck
+cd ~/claudedeck
 ```
 
 Any folder works. Setup records where it is (see [Moving the folder](#moving-the-folder)).
@@ -84,7 +84,7 @@ mc doctor
 ```
 
 If `mc` isn't found, `~/.local/bin` isn't on your PATH. Add `export PATH="$HOME/.local/bin:$PATH"` to your
-`~/.zshrc`, or run `~/multiclaude/bin/mc` directly.
+`~/.zshrc`, or run `~/claudedeck/bin/mc` directly.
 
 ## 4. Add your accounts
 
@@ -183,14 +183,14 @@ For iTerm instead of Terminal: **Settings → Open sessions in → iTerm**.
 | `~/.claude/settings.json` | `statusLine` set to `mc statusline`; a `SessionStart` hook running `mc hook session-start`. A backup is saved as `settings.json.mc-backup-<time>` | `mc uninstall` (restores your previous status line) |
 | `~/Library/LaunchAgents/com.multiclaude.daemon.plist` | Runs the background service at login | `mc uninstall` |
 | `~/Library/LaunchAgents/com.multiclaude.menubar.plist` and `~/.multiclaude/MultiClaude.app` | The menu bar app | `mc uninstall` |
-| Claude Code plugin `multiclaude-move@multiclaude` | The **Move to <account>** button, read from `plugin/` in the repo | `mc uninstall` |
+| Claude Code plugin `multiclaude-move@claudedeck` | The **Move to <account>** button, read from `plugin/` in the repo | `mc uninstall` |
 | `~/.zshrc`, `~/.bashrc`, `~/.bash_profile` or fish (only with `--shell` / `mc shell on`) | A `claude` function between `# >>> multiclaude` marker lines; the old file is saved as `.mc-backup` | `mc shell off` |
 | `~/.multiclaude/` | Config, profiles, usage, logs | Delete the folder after `mc uninstall` |
 
 ## Updating
 
 ```sh
-cd ~/multiclaude
+cd ~/claudedeck
 git pull
 mc setup            # safe to run again; rebuilds the menu bar app and restarts the service
 ```
@@ -206,7 +206,7 @@ After moving the folder, run `./bin/mc setup` (and `mc shell on` if you use it) 
 mc uninstall          # status line, hook, shell function, background service, menu bar app
 mc remove work        # for each extra profile: deletes its folder and its Keychain login
 rm -rf ~/.multiclaude # config, logs, stats cache, handover notes
-rm -rf ~/multiclaude  # the code
+rm -rf ~/claudedeck   # the code
 ```
 
 Your main `~/.claude` and its login are never touched. History created in other profiles already lives in
@@ -218,8 +218,8 @@ Requirements: Windows 10 or 11, [Node.js](https://nodejs.org) 22.18+ (or 23.6+),
 (`irm https://claude.ai/install.ps1 | iex`, or npm), and git.
 
 ```powershell
-git clone https://github.com/subh05sus/multiclaude.git $HOME\multiclaude
-node --disable-warning=ExperimentalWarning $HOME\multiclaude\src\cli.ts setup --shell
+git clone https://github.com/finefigo/claudedeck.git $HOME\claudedeck
+node --disable-warning=ExperimentalWarning $HOME\claudedeck\src\cli.ts setup --shell
 ```
 
 What it does on Windows:
