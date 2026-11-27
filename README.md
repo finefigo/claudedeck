@@ -288,6 +288,4 @@ The application interacts with Claude Code settings and usage endpoints that may
 
 
 
-## License
 
-This project is distributed under the MIT License. See the [LICENSE](LICENSE) file for details.
